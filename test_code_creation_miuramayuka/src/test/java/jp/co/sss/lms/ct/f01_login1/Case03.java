@@ -37,22 +37,16 @@ public class Case03 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		//	指定URLへ遷移
 		webDriver.get("http://localhost:8080/lms/");
 
-		// タイトルの検証
 		assertEquals("ログイン | LMS", webDriver.getTitle());
 
-		// 見出しの検証
 		assertEquals("ログイン", webDriver.findElement(By.tagName("h2")).getText());
 
-		// ログインIDフォームの確認
 		assertTrue(webDriver.findElement(By.id("loginId")).isDisplayed());
 
-		// パスワードフォームの確認
 		assertTrue(webDriver.findElement(By.id("password")).isDisplayed());
 
-		// スクリーンショット
 		getEvidence(new Object() {
 		});
 	}
@@ -67,16 +61,21 @@ public class Case03 {
 
 		//	パスワード入力
 		webDriver.findElement(By.id("password")).clear();
-		webDriver.findElement(By.id("password")).sendKeys("StudentAA01");
+		webDriver.findElement(By.id("password")).sendKeys("ItTest2023");
 
 		//	ログインボタンを押下
 		webDriver.findElement(By.className("btn-primary")).click();
 
 		// ページが更新されるまで待機
-		visibilityTimeout(By.className("error"), 10);
+		visibilityTimeout(By.id("open-all-panel"), 10);
 
 		// コース詳細画面に遷移しているかURL確認
 		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/course/detail"));
+
+		assertEquals("コース詳細 | LMS", webDriver.getTitle());
+
+		getEvidence(new Object() {
+		});
 	}
 
 }
