@@ -65,22 +65,27 @@ public class Case04 {
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		//	画面操作
+		//	ログインID入力
 		webDriver.findElement(By.id("loginId")).clear();
 		webDriver.findElement(By.id("loginId")).sendKeys("StudentAA01");
 
+		//	パスワード入力
 		webDriver.findElement(By.id("password")).clear();
 		webDriver.findElement(By.id("password")).sendKeys("ItTest2023");
 
+		//	ログインボタンを押下
 		webDriver.findElement(By.className("btn-primary")).click();
 
-		//	画面検証
+		// ページが更新されるまで待機
 		visibilityTimeout(By.id("open-all-panel"), 10);
 
+		// コース詳細画面に遷移しているかURL確認
 		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/course/detail"));
 
+		// タイトルの検証
 		assertEquals("コース詳細 | LMS", webDriver.getTitle());
 
+		// スクリーンショット
 		getEvidence(new Object() {
 		});
 	}
