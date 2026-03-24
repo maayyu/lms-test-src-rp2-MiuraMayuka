@@ -41,16 +41,22 @@ public class Case04 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
+		//	指定URLへ遷移
 		webDriver.get("http://localhost:8080/lms/");
 
+		// タイトルの検証
 		assertEquals("ログイン | LMS", webDriver.getTitle());
 
+		// 見出しの検証
 		assertEquals("ログイン", webDriver.findElement(By.tagName("h2")).getText());
 
+		// ログインIDフォームの確認
 		assertTrue(webDriver.findElement(By.id("loginId")).isDisplayed());
 
+		// パスワードフォームの確認
 		assertTrue(webDriver.findElement(By.id("password")).isDisplayed());
 
+		// スクリーンショット
 		getEvidence(new Object() {
 		});
 	}

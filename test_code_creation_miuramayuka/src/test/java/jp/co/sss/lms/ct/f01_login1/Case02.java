@@ -53,6 +53,7 @@ public class Case02 {
 		// パスワードフォームの確認
 		assertTrue(webDriver.findElement(By.id("password")).isDisplayed());
 
+		// スクリーンショット
 		getEvidence(new Object() {
 		});
 	}
