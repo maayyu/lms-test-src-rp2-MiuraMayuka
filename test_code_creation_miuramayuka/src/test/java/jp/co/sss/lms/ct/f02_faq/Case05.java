@@ -170,11 +170,11 @@ public class Case05 {
 		visibilityTimeout(By.cssSelector(".sortabletable"), 10);
 
 		//	検索結果が表示されているかの確認
-		List<WebElement> showWebElements = webDriver.findElements(By.cssSelector(".sortabletable"));
+		List<WebElement> showWebElements = webDriver.findElements(By.className("mb10"));
 		assertTrue(showWebElements.size() > 0, "検索結果が1件以上表示されている");
 
 		//	検索結果の検証
-		assertEquals("Q.キャンセル料・途中退校について", webDriver.findElement(By.className("mb10")).getText());
+		assertEquals("Q.キャンセル料・途中退校について", showWebElements.getFirst().getText());
 
 		//	スクリーンショット
 		getEvidence(new Object() {
