@@ -1,6 +1,9 @@
 package jp.co.sss.lms.ct.f03_report;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * 結合テスト レポート機能
@@ -35,35 +40,136 @@ public class Case07 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
+		//	指定URLへ遷移
+		webDriver.get("http://localhost:8080/lms/");
+
+		// タイトルの検証
+		assertEquals("ログイン | LMS", webDriver.getTitle());
+
+		// 見出しの検証
+		assertEquals("ログイン", webDriver.findElement(By.tagName("h2")).getText());
+
+		// ログインIDフォームの確認
+		assertTrue(webDriver.findElement(By.id("loginId")).isDisplayed());
+
+		// パスワードフォームの確認
+		assertTrue(webDriver.findElement(By.id("password")).isDisplayed());
+
+		// スクリーンショット
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		// TODO ここに追加
+		//	ログインID入力
+		webDriver.findElement(By.id("loginId")).clear();
+		webDriver.findElement(By.id("loginId")).sendKeys("StudentAA01");
+
+		//	パスワード入力
+		webDriver.findElement(By.id("password")).clear();
+		webDriver.findElement(By.id("password")).sendKeys("ItTest2023");
+
+		//	ログインボタンを押下
+		webDriver.findElement(By.className("btn-primary")).click();
+
+		// ページが更新されるまで待機
+		visibilityTimeout(By.id("open-all-panel"), 10);
+
+		// コース詳細画面に遷移しているかURL確認
+		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/course/detail"));
+
+		// タイトルの検証
+		assertEquals("コース詳細 | LMS", webDriver.getTitle());
+
+		// スクリーンショット
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(3)
 	@DisplayName("テスト03 未提出の研修日の「詳細」ボタンを押下しセクション詳細画面に遷移")
 	void test03() {
-		// TODO ここに追加
+		//	2022年10月5日(水)のステータスが「未提出」か確認
+		List<WebElement> rows = webDriver.findElement(
+				By.className("sctionList")).findElements(By.tagName("tr"));
+
+		for (WebElement row : rows) {
+			List<WebElement> cols = row.findElements(By.tagName("td"));
+			if (cols.get(0).getText().equals("2022年10月5日(水)")) {
+				assertEquals("未提出", cols.get(2).getText());
+				break;
+			}
+		}
+
+		// 「未提出」の場合は2022年10月5日(水)の「詳細」ボタンを押下
+		webDriver.findElements(By.className("btn-default")).get(3).click();
+
+		//	ページが更新されるまで待機
+		visibilityTimeout(By.className("breadcrumb"), 10);
+
+		// セクション詳細画面に遷移しているかURL確認
+		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/section/detail"));
+
+		// タイトルの検証
+		assertEquals("セクション詳細 | LMS", webDriver.getTitle());
+
+		// スクリーンショット
+		getEvidence(new Object() {
+		});
+
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("テスト04 「提出する」ボタンを押下しレポート登録画面に遷移")
 	void test04() {
-		// TODO ここに追加
+		//	「日報【デモ】を提出する」ボタンを押下
+		webDriver.findElement(By.cssSelector("input[value='日報【デモ】を提出する']")).click();
+
+		// ページが更新されるまで待機
+		visibilityTimeout(By.tagName("h2"), 10);
+
+		// レポート登録画面に遷移しているかURL確認
+		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/report/regist"));
+
+		// タイトルの検証
+		assertEquals("レポート登録 | LMS", webDriver.getTitle());
+
+		// スクリーンショット
+		getEvidence(new Object() {
+		});
+
 	}
 
 	@Test
 	@Order(5)
 	@DisplayName("テスト05 報告内容を入力して「提出する」ボタンを押下し確認ボタン名が更新される")
 	void test05() {
-		// TODO ここに追加
+		// 報告レポートのテキストボックスに入力（テスト）
+		webDriver.findElement(By.id("content_0")).clear();
+		webDriver.findElement(By.id("content_0")).sendKeys("テスト");
+
+		//	「提出する」ボタンを押下
+		webDriver.findElement(By.className("btn-primary")).click();
+
+		//	ページが更新されるまで待機
+		visibilityTimeout(By.className("breadcrumb"), 10);
+
+		// セクション詳細画面に遷移しているかURL確認
+		assertTrue(webDriver.getCurrentUrl().startsWith("http://localhost:8080/lms/section/detail"));
+
+		//	「提出済み日報【デモ】を確認する」になっているか確認
+		assertEquals("提出済み日報【デモ】を確認する",
+				webDriver.findElement(By.cssSelector("input[value='提出済み日報【デモ】を確認する']")).getAttribute("value"));
+
+		// スクリーンショット
+		getEvidence(new Object() {
+		});
+
 	}
 
 }
